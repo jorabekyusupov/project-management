@@ -36,7 +36,7 @@ RUN groupadd -g 977 nginx && useradd -u 978 -g 977 -d /var/www -s /bin/bash ngin
 RUN chmod 775 /var/www/storage /var/www/bootstrap/cache || true \
     && chown -R nginx:nginx /var/www || true
 
-USER nginx
+#USER nginx
 
 EXPOSE 9000
 CMD ["php-fpm"]
