@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Library\Bot\InfoBot;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,6 +46,11 @@ class Ticket extends Model
                 $ticket->created_by = auth()->id();
             }
         });
+        static::created(function ($ticket) {
+
+
+
+        });
 
         static::updating(function ($ticket) {
             if ($ticket->isDirty('ticket_status_id')) {
@@ -70,7 +76,8 @@ class Ticket extends Model
     // Multi-user assignment relationship
     public function assignees(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'ticket_users');
+        return $this->belongsToMany(User::class, 'ticket_users', 'ticket_id', 'user_id');
+
     }
 
     // Creator relationship

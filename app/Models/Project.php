@@ -16,8 +16,9 @@ class Project extends Model
         'name',
         'description',
         'ticket_prefix',
+        'chat_id',
         'start_date',
-        'end_date',
+        'end_date'
     ];
 
     protected $casts = [

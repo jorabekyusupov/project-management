@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Resources\UserResource\Pages\EditProfile;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -62,6 +63,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->passwordReset()
             ->emailVerification()
-            ->profile();
+            ->profile(EditProfile::class);
     }
 }

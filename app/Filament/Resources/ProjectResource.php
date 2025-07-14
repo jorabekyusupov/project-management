@@ -46,7 +46,10 @@ class ProjectResource extends Resource
                     ->helperText('Create standard Backlog, To Do, In Progress, Review, and Done statuses automatically')
                     ->default(true)
                     ->dehydrated(false)
-                    ->visible(fn ($livewire) => $livewire instanceof Pages\CreateProject),
+                    ->visible(fn($livewire) => $livewire instanceof Pages\CreateProject),
+                Forms\Components\TextInput::make('chat_id')
+                    ->label('Телеграм Чат ID')
+                    ->maxLength(255)
             ]);
     }
 
@@ -70,14 +73,13 @@ class ProjectResource extends Resource
                         if (!$record->end_date) {
                             return null;
                         }
-                        
+
                         return $record->remaining_days . ' days';
                     })
                     ->badge()
-                    ->color(fn (Project $record): string => 
-                        !$record->end_date ? 'gray' :
-                        ($record->remaining_days <= 0 ? 'danger' : 
-                        ($record->remaining_days <= 7 ? 'warning' : 'success'))
+                    ->color(fn(Project $record): string => !$record->end_date ? 'gray' :
+                        ($record->remaining_days <= 0 ? 'danger' :
+                            ($record->remaining_days <= 7 ? 'warning' : 'success'))
                     ),
                 Tables\Columns\TextColumn::make('members_count')
                     ->counts('members')
@@ -131,11 +133,11 @@ class ProjectResource extends Resource
         $query = parent::getEloquentQuery();
 
         $userIsSuperAdmin = auth()->user() && (
-            (method_exists(auth()->user(), 'hasRole') && auth()->user()->hasRole('super_admin'))
-            || (isset(auth()->user()->role) && auth()->user()->role === 'super_admin')
-        );
+                (method_exists(auth()->user(), 'hasRole') && auth()->user()->hasRole('super_admin'))
+                || (isset(auth()->user()->role) && auth()->user()->role === 'super_admin')
+            );
 
-        if (! $userIsSuperAdmin) {
+        if (!$userIsSuperAdmin) {
             $query->whereHas('members', function (Builder $query) {
                 $query->where('user_id', auth()->id());
             });
