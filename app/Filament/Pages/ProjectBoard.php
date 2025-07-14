@@ -22,9 +22,9 @@ class ProjectBoard extends Page
 
     protected static string $view = 'filament.pages.project-board';
 
-    protected static ?string $title = 'Project Board';
+    protected static ?string $title = 'Доска проектов';
 
-    protected static ?string $navigationLabel = 'Project Board';
+    protected static ?string $navigationLabel = 'Доска проектов';
 
     protected static ?string $navigationGroup = 'Project Management';
 

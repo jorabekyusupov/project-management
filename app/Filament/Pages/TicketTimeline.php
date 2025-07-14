@@ -13,9 +13,9 @@ class TicketTimeline extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
 
-    protected static ?string $navigationLabel = 'Timeline';
+    protected static ?string $navigationLabel = 'Таймлайн задач';
 
-    protected static ?string $title = 'Ticket Timeline';
+    protected static ?string $title = 'Таймлайн задач';
 
     protected static ?int $navigationSort = 2;
 

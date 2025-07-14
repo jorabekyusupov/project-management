@@ -22,7 +22,10 @@ class TicketResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-ticket';
 
-    protected static ?string $navigationLabel = 'Tickets';
+    protected static ?string $navigationLabel = 'Задачи';
+    protected static ?string $pluralLabel = 'Задачи';
+    protected static ?string $label = 'Задача';
+
 
     protected static ?string $navigationGroup = 'Project Management';
 
@@ -53,7 +56,7 @@ class TicketResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('project_id')
-                    ->label('Project')
+                    ->label(__('projects'))
                     ->options(function () {
                         if (auth()->user()->hasRole(['super_admin'])) {
                             return Project::pluck('name', 'id')->toArray();
@@ -73,7 +76,7 @@ class TicketResource extends Resource
                     }),
 
                 Forms\Components\Select::make('ticket_status_id')
-                    ->label('Status')
+                    ->label(__('status'))
                     ->options(function ($get) {
                         $projectId = $get('project_id');
                         if (! $projectId) {
@@ -90,14 +93,14 @@ class TicketResource extends Resource
                     ->preload(),
 
                 Forms\Components\Select::make('priority_id')
-                    ->label('Priority')
+                    ->label(__('priority'))
                     ->options(TicketPriority::pluck('name', 'id')->toArray())
                     ->searchable()
                     ->preload()
                     ->nullable(),
 
                 Forms\Components\Select::make('epic_id')
-                    ->label('Epic')
+                    ->label(__('epic'))
                     ->options(function (callable $get) {
                         $projectId = $get('project_id');
                         
@@ -115,18 +118,18 @@ class TicketResource extends Resource
                     ->hidden(fn (callable $get): bool => !$get('project_id')),
 
                 Forms\Components\TextInput::make('name')
-                    ->label('Ticket Name')
+                    ->label(__('name'))
                     ->required()
                     ->maxLength(255),
 
                 Forms\Components\RichEditor::make('description')
-                    ->label('Description')
+                    ->label(__('description'))
                     ->fileAttachmentsDirectory('attachments')
                     ->columnSpanFull(),
 
                 // Multi-user assignment
                 Forms\Components\Select::make('assignees')
-                    ->label('Assigned to')
+                    ->label(__('Assigned to'))
                     ->multiple()
                     ->relationship(
                         name: 'assignees',
@@ -154,7 +157,7 @@ class TicketResource extends Resource
                     ->hidden(fn (callable $get): bool => !$get('project_id'))
                     ->live(),
                 Forms\Components\DatePicker::make('due_date')
-                    ->label('Due Date')
+                    ->label(__('Due Date'))
                     ->nullable(),
 
                 // Show created by field in edit mode
@@ -171,27 +174,27 @@ class TicketResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('uuid')
-                    ->label('Ticket ID')
+                    ->label(__('Ticket ID'))
                     ->searchable()
                     ->copyable(),
 
                 Tables\Columns\TextColumn::make('project.name')
-                    ->label('Project')
+                    ->label(__('project'))
                     ->sortable()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Name')
+                    ->label(__('name'))
                     ->searchable()
                     ->limit(30),
 
                 Tables\Columns\TextColumn::make('status.name')
-                    ->label('Status')
+                    ->label(__('status'))
                     ->badge()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('priority.name')
-                    ->label('Priority')
+                    ->label(__('priority'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'High' => 'danger',
@@ -201,11 +204,11 @@ class TicketResource extends Resource
                     })
                     ->sortable()
                     ->default('—')
-                    ->placeholder('No Priority'),
+                    ->placeholder(__('No Priority')),
 
                 // Display multiple assignees
                 Tables\Columns\TextColumn::make('assignees.name')
-                    ->label('Assign To')
+                    ->label(__('Assign To'))
                     ->badge()
                     ->separator(',')
                     ->limitList(2)
@@ -214,17 +217,19 @@ class TicketResource extends Resource
 
                 Tables\Columns\TextColumn::make('creator.name')
                     ->label('Created By')
+                    ->translateLabel()
                     ->sortable()
                     ->searchable()
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make('due_date')
                     ->label('Due Date')
+                    ->translateLabel()
                     ->date()
                     ->sortable(),
                     
                 Tables\Columns\TextColumn::make('epic.name')
-                    ->label('Epic')
+                    ->label(__('epic'))
                     ->sortable()
                     ->searchable()
                     ->default('—')

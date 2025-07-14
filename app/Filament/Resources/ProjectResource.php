@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class ProjectResource extends Resource
 {
     protected static ?string $model = Project::class;
+    protected static ?string $label ='Проект';
+    protected static ?string $pluralLabel = 'Проекты';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -25,25 +27,28 @@ class ProjectResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label(__('name'))
                     ->required()
                     ->maxLength(255),
                 Forms\Components\RichEditor::make('description')
+                    ->label(__('description'))
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('ticket_prefix')
+                    ->label(__('ticket_prefix'))
                     ->required()
                     ->maxLength(255),
                 Forms\Components\DatePicker::make('start_date')
-                    ->label('Start Date')
+                    ->label( __('start_date'))
                     ->native(false)
                     ->displayFormat('d/m/Y'),
                 Forms\Components\DatePicker::make('end_date')
-                    ->label('End Date')
+                    ->label(__('end_date'))
                     ->native(false)
                     ->displayFormat('d/m/Y')
                     ->afterOrEqual('start_date'),
                 Forms\Components\Toggle::make('create_default_statuses')
-                    ->label('Use Default Ticket Statuses')
-                    ->helperText('Create standard Backlog, To Do, In Progress, Review, and Done statuses automatically')
+                    ->label(__('use_default_ticket_statuses'))
+                    ->helperText(__("Create standard Backlog, To Do, In Progress, Review, and Done statuses automatically"))
                     ->default(true)
                     ->dehydrated(false)
                     ->visible(fn($livewire) => $livewire instanceof Pages\CreateProject),
@@ -58,17 +63,21 @@ class ProjectResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('name'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('ticket_prefix')
+                    ->label(__('ticket_prefix'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('start_date')
+                    ->label(__('start_date'))
                     ->date('d/m/Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('end_date')
+                    ->label(__('end_date'))
                     ->date('d/m/Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('remaining_days')
-                    ->label('Remaining Days')
+                    ->label(__('remaining_days'))
                     ->getStateUsing(function (Project $record): ?string {
                         if (!$record->end_date) {
                             return null;
@@ -83,10 +92,10 @@ class ProjectResource extends Resource
                     ),
                 Tables\Columns\TextColumn::make('members_count')
                     ->counts('members')
-                    ->label('Members'),
+                    ->label(__('members')),
                 Tables\Columns\TextColumn::make('tickets_count')
                     ->counts('tickets')
-                    ->label('Tickets'),
+                    ->label(__('tickets')),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

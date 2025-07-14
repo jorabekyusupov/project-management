@@ -17,7 +17,10 @@ class EpicsOverview extends Page
 
     protected static ?string $navigationGroup = 'Project Management';
 
-    protected static ?string $navigationLabel = 'Epics';
+    protected static ?string $title = 'Этапы проекта';
+    protected static ?string $navigationLabel = 'Этапы';
+    protected static ?string $pluralLabel = 'Этапы';
+    protected static ?string $label = 'Этап';
 
     protected static ?int $navigationSort = 3;
 
@@ -43,8 +46,8 @@ class EpicsOverview extends Page
         } elseif ($project_id && !$this->availableProjects->contains('id', $project_id)) {
             // Project not found or user doesn't have access
             Notification::make()
-                ->title('Project Not Found')
-                ->body('The selected project was not found or you do not have access to it.')
+                ->title(__("Project Not Found"))
+                ->body(__('The selected project was not found or you do not have access to it.'))
                 ->danger()
                 ->send();
             $this->redirect(static::getUrl());

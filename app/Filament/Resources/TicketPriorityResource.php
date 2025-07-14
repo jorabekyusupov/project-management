@@ -19,9 +19,10 @@ class TicketPriorityResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-flag';
 
-    protected static ?string $navigationLabel = 'Ticket Priorities';
+    protected static ?string $navigationLabel = 'Приоритеты';
 
-    protected static ?string $pluralLabel = 'Ticket Priorities';
+    protected static ?string $pluralLabel = 'Приоритеты задач';
+    protected static ?string $label = 'Приоритет задачи';
 
     protected static ?string $navigationGroup = 'Settings';
 
@@ -30,10 +31,12 @@ class TicketPriorityResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label(__('name'))
                     ->required()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
                 Forms\Components\ColorPicker::make('color')
+                    ->label(__('color'))
                     ->required()
                     ->default('#6B7280'),
             ]);
@@ -44,21 +47,26 @@ class TicketPriorityResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('name'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\ColorColumn::make('color')
+                    ->label(__('color'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tickets_count')
                     ->counts('tickets')
-                    ->label('Tickets Count')
+                    ->label(__('tickets'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->translateLabel()
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
+                    ->translateLabel()
+
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

@@ -16,6 +16,8 @@ class TicketCommentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $label = 'Комментарий';
+    protected static ?string $pluralLabel = 'Комментарии';
     protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
@@ -23,6 +25,7 @@ class TicketCommentResource extends Resource
         return $form
             ->schema([
                 Forms\Components\RichEditor::make('comment')
+                    ->label(__('comment'))
                     ->required()
                     ->columnSpanFull(),
             ]);
@@ -33,9 +36,11 @@ class TicketCommentResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('ticket.name')
+                    ->label(__('ticket'))
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
+                    ->label(__('user'))
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

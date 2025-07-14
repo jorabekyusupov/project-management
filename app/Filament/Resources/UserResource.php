@@ -19,21 +19,26 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
-    protected static ?string $navigationLabel = 'Users';
+    protected static ?string $navigationLabel = 'Пользователи';
+    protected static ?string $pluralLabel = 'Пользователи';
+    protected static ?string $label = 'Пользователь';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label(__('name'))
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
+                    ->label(__('email'))
                     ->email()
                     ->required()
                     ->maxLength(255),
                 Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
+                    ->label(__('password'))
                     ->password()
                     ->dehydrateStateUsing(fn ($state) => ! empty($state) ? Hash::make($state) : null
                     )
@@ -42,6 +47,7 @@ class UserResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('roles')
                     ->relationship('roles', 'name')
+                    ->label(__('roles'))
                     ->multiple()
                     ->preload()
                     ->searchable(),
@@ -56,34 +62,37 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('name'))
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('email')
+                    ->label(__('email'))
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('roles.name')
-                    ->label('Roles')
+                    ->label(__('roles'))
                     ->badge()
                     ->separator(',')
                     ->tooltip(fn (User $record): string => $record->roles->pluck('name')->join(', ') ?: 'No Roles')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('projects_count')
-                    ->label('Projects')
+                    ->label(__('projects'))
+
                     ->counts('projects')
                     ->tooltip(fn (User $record): string => $record->projects->pluck('name')->join(', ') ?: 'No Projects')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('assigned_tickets_count')
-                    ->label('Assigned Tickets')
+                    ->label(__('Assigned Tickets'))
                     ->counts('assignedTickets')
                     ->tooltip('Number of tickets assigned to this user')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('created_tickets_count')
-                    ->label('Created Tickets')
+                    ->label(__('Created Tickets'))
                     ->getStateUsing(function (User $record): int {
                         return $record->createdTickets()->count();
                     })
