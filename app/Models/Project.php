@@ -21,6 +21,7 @@ class Project extends Model
         'end_date'
     ];
 
+
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',

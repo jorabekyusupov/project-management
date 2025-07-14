@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Filament\Resources\TicketResource;
+use App\Library\Bot\InfoBot;
 use App\Models\Project;
 use App\Models\Ticket;
 use Filament\Actions\Action;
@@ -50,10 +51,10 @@ class ProjectBoard extends Page
         }
 
         if ($project_id && $this->projects->contains('id', $project_id)) {
-            $this->selectedProjectId = (int) $project_id;
+            $this->selectedProjectId = (int)$project_id;
             $this->selectedProject = Project::find($project_id);
             $this->loadTicketStatuses();
-        } elseif ($this->projects->isNotEmpty() && ! is_null($project_id)) {
+        } elseif ($this->projects->isNotEmpty() && !is_null($project_id)) {
             Notification::make()
                 ->title('Project Not Found')
                 ->danger()
@@ -80,7 +81,7 @@ class ProjectBoard extends Page
     public function updatedSelectedProjectId($value): void
     {
         if ($value) {
-            $this->selectProject((int) $value);
+            $this->selectProject((int)$value);
         } else {
             $this->selectedProject = null;
             $this->ticketStatuses = collect();
@@ -91,7 +92,7 @@ class ProjectBoard extends Page
 
     public function loadTicketStatuses(): void
     {
-        if (! $this->selectedProject) {
+        if (!$this->selectedProject) {
             $this->ticketStatuses = collect();
 
             return;
@@ -99,7 +100,7 @@ class ProjectBoard extends Page
 
         $this->ticketStatuses = $this->selectedProject->ticketStatuses()
             ->with(['tickets' => function ($query) {
-                 $query->with(['assignees', 'status', 'priority'])
+                $query->with(['assignees', 'status', 'priority'])
                     ->orderBy('created_at', 'desc');
             }])
             ->orderBy('sort_order')
@@ -109,7 +110,8 @@ class ProjectBoard extends Page
     #[On('ticket-moved')]
     public function moveTicket($ticketId, $newStatusId): void
     {
-        $ticket = Ticket::find($ticketId);
+        $ticket = Ticket::find($ticketId)
+            ->load(['project', 'priority', 'creator', 'assignees', 'status']);;
 
         if ($ticket && $ticket->project_id === $this->selectedProject?->id) {
             $ticket->update([
@@ -124,6 +126,35 @@ class ProjectBoard extends Page
                 ->title('Ticket Updated')
                 ->success()
                 ->send();
+
+            $assignees = $ticket->assignees->pluck('name')->implode(', ');
+            $assigneesChatIDs = $ticket->assignees->pluck('chat_id')->filter()->all();
+            $text = '🔧 Cтатус задачи обновлен!' . PHP_EOL .
+                '🆔 Проект: ' . $ticket->project->name . PHP_EOL .
+                '👨‍💼 Создатель: ' . $ticket->creator->name . PHP_EOL .
+                '❕ Статус: ' . $ticket->status->name . PHP_EOL .
+                '🔖 Этап: ' . ($ticket->epic ? $ticket->epic->name : 'Не указан') . PHP_EOL .
+                '⏰ Срок: ' . ($ticket->due_date ? $ticket->due_date->format('d.m.Y') : 'Не указан') . PHP_EOL .
+                '‼️ Приоритет: ' . ($ticket->priority ? $ticket->priority->name : 'Не указан') . PHP_EOL .
+                '👥 Исполнители: ' . ($assignees ?: 'Не назначены') . PHP_EOL;
+            app(InfoBot::class)
+                ->send($ticket->project->chat_id,
+                    $text
+                );
+            if (!empty($assigneesChatIDs)) {
+                foreach ($assigneesChatIDs as $assigneesChatID) {
+                    app(InfoBot::class)
+                        ->send($assigneesChatID,
+                            '🔧 Cтатус задачи обновлен: ' . $ticket->name . PHP_EOL .
+                            '🆔 Проект: ' . $ticket->project->name . PHP_EOL .
+                            '👨‍💼 Создатель: ' . $ticket->creator->name . PHP_EOL .
+                            '❕ Статус: ' . $ticket->status->name . PHP_EOL .
+                            '🔖 Этап: ' . ($ticket->epic ? $ticket->epic->name : 'Не указан') . PHP_EOL .
+                            '⏰ Срок: ' . ($ticket->due_date ? $ticket->due_date->format('d.m.Y') : 'Не указан') . PHP_EOL .
+                            '‼️ Приоритет: ' . ($ticket->priority ? $ticket->priority->name : 'Не указан') . PHP_EOL
+                        );
+                }
+            }
         }
     }
 
@@ -138,7 +169,7 @@ class ProjectBoard extends Page
     {
         $ticket = Ticket::with(['assignees', 'status', 'project', 'priority'])->find($ticketId);
 
-        if (! $ticket) {
+        if (!$ticket) {
             Notification::make()
                 ->title('Ticket Not Found')
                 ->danger()
@@ -147,7 +178,7 @@ class ProjectBoard extends Page
             return;
         }
 
-        
+
         $url = TicketResource::getUrl('view', ['record' => $ticketId]);
         $this->js("window.open('{$url}', '_blank')");
     }
@@ -161,7 +192,7 @@ class ProjectBoard extends Page
     {
         $ticket = Ticket::find($ticketId);
 
-        if (! $this->canEditTicket($ticket)) {
+        if (!$this->canEditTicket($ticket)) {
             Notification::make()
                 ->title('Permission Denied')
                 ->body('You do not have permission to edit this ticket.')
@@ -180,8 +211,8 @@ class ProjectBoard extends Page
             Action::make('new_ticket')
                 ->label('New Ticket')
                 ->icon('heroicon-m-plus')
-                ->visible(fn () => $this->selectedProject !== null && auth()->user()->hasRole(['super_admin']))
-                ->url(fn (): string => TicketResource::getUrl('create', [
+                ->visible(fn() => $this->selectedProject !== null && auth()->user()->hasRole(['super_admin']))
+                ->url(fn(): string => TicketResource::getUrl('create', [
                     'project_id' => $this->selectedProject?->id,
                     'ticket_status_id' => $this->selectedProject?->ticketStatuses->first()?->id,
                 ])),
@@ -191,15 +222,15 @@ class ProjectBoard extends Page
                 ->icon('heroicon-m-arrow-path')
                 ->action('refreshBoard')
                 ->color('warning'),
-            
+
             ExportTicketsAction::make()
-                ->visible(fn () => $this->selectedProject !== null),
+                ->visible(fn() => $this->selectedProject !== null),
         ];
     }
 
     private function canViewTicket(?Ticket $ticket): bool
     {
-        if (! $ticket) {
+        if (!$ticket) {
             return false;
         }
 
@@ -210,7 +241,7 @@ class ProjectBoard extends Page
 
     private function canEditTicket(?Ticket $ticket): bool
     {
-        if (! $ticket) {
+        if (!$ticket) {
             return false;
         }
 
@@ -221,7 +252,7 @@ class ProjectBoard extends Page
 
     private function canManageTicket(?Ticket $ticket): bool
     {
-        if (! $ticket) {
+        if (!$ticket) {
             return false;
         }
 
@@ -243,7 +274,7 @@ class ProjectBoard extends Page
         }
 
         $tickets = collect();
-        
+
         if ($this->selectedProject) {
             $tickets = $this->selectedProject->tickets()
                 ->with(['assignees', 'status', 'project', 'epic'])
@@ -253,7 +284,7 @@ class ProjectBoard extends Page
             $ticketIds = $this->ticketStatuses->flatMap(function ($status) {
                 return $status->tickets->pluck('id');
             });
-            
+
             $tickets = Ticket::whereIn('id', $ticketIds)
                 ->with(['assignees', 'status', 'project', 'epic'])
                 ->orderBy('created_at', 'asc')
@@ -290,13 +321,13 @@ class ProjectBoard extends Page
                         document.body.removeChild(a);
                     });
             ");
-            
+
             Notification::make()
                 ->title('Export Successful')
                 ->body('Your Excel file is being downloaded.')
                 ->success()
                 ->send();
-            
+
         } catch (\Exception $e) {
             Notification::make()
                 ->title('Export Failed')

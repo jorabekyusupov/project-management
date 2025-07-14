@@ -12,6 +12,7 @@ class CreateProject extends CreateRecord
     protected function afterCreate(): void
     {
 
+
         $createDefaultStatuses = $this->data['create_default_statuses'] ?? true;
 
         if ($createDefaultStatuses) {
@@ -27,5 +28,7 @@ class CreateProject extends CreateRecord
                 $this->record->ticketStatuses()->create($status);
             }
         }
+
+
     }
 }
