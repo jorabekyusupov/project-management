@@ -16,6 +16,21 @@ services:
       - /var/www/vhosts/canban-storage:/var/www/storage
       - /var/www/vhosts/canban-storage/app/public:/var/www/public/storage
 
+  canban_queue:
+    image: $DOCKER_IMAGE:$TAG
+    container_name: canban_queue
+    restart: unless-stopped
+    command: sh -c "php artisan queue:work --sleep=3 --tries=3 --max-time=3600 >> storage/logs/canban_queue.log 2>&1"
+    volumes:
+      - code:/var/www
+      - /var/www/vhosts/canban-storage:/var/www/storage
+      - /var/www/vhosts/canban-storage/app/public:/var/www/public/storage
+    depends_on:
+      - canban
+    networks:
+      - app-network
+
+
   canban_nginx:
     image: nginx:stable-alpine
     container_name: canban_nginx
