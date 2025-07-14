@@ -33,6 +33,10 @@ RUN composer install
 
 RUN useradd -u 978 -g www-data -d /var/www -s /bin/bash www-data || true
 
+RUN chmod 775 /var/www/storage /var/www/bootstrap/cache || true \
+    && chown -R www-data:www-data /var/www || true
+
+
 USER www-data
 
 EXPOSE 9000
