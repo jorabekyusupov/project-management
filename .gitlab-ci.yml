@@ -1,6 +1,7 @@
 stages:
   - build
   - deploy
+  - migrate
 
 variables:
   TAG: ${CI_PIPELINE_IID}
@@ -26,3 +27,14 @@ deploy:
     - main
   tags:
     - temppriz
+  
+migrate:
+  stage: migrate
+  script:
+    - docker exec kpi php artisan migrate:fresh --seed
+  when: manual
+  only:
+    - main
+  tags:
+    - temppriz
+

@@ -31,12 +31,12 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY . .
 RUN composer install
 
-RUN groupadd -g 977 nginx && useradd -u 978 -g 977 -d /var/www -s /bin/bash nginx
+RUN groupadd -g 977 www-data && useradd -u 978 -g 977 -d /var/www -s /bin/bash www-data
 
 RUN chmod 775 /var/www/storage /var/www/bootstrap/cache || true \
-    && chown -R nginx:nginx /var/www || true
+    && chown -R www-data:www-data /var/www || true
 
-USER nginx
+USER www-data
 
 EXPOSE 9000
 CMD ["php-fpm"]
