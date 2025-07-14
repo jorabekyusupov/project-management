@@ -1,0 +1,28 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  TAG: ${CI_PIPELINE_IID}
+  DOCKER_IMAGE: canban
+
+build:
+  stage: build
+  script:
+    - echo "$ENV" > .env
+    - docker build -t $DOCKER_IMAGE:$TAG -f Dockerfile .
+  only:
+    - main
+  tags:
+    - temppriz
+
+deploy:
+  stage: deploy
+  script:
+    - docker compose down
+    - docker volume rm canban || echo "Volume not found, skipping"
+    - docker compose up -d 
+  only:
+    - main
+  tags:
+    - temppriz
