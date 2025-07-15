@@ -56,7 +56,7 @@ class MembersRelationManager extends RelationManager
                                 ->send($record->chat_id,
                                     '🆕 Вам добавлен новый участник в проект: ' . $ownerRecord->name . PHP_EOL .
                                     '📅 Дата начала: ' . $ownerRecord?->start_date->format('d/m/Y') . PHP_EOL .
-                                    '📅 Дата окончания: ' . ($ownerRecord?->end_date ? $ownerRecord->end_date->format('d/m/Y') : 'Не указана') . PHP_EOL
+                                    '📅 Дата окончания: ' . ($ownerRecord?->end_date ? $ownerRecord?->end_date->format('d/m/Y') : 'Не указана') . PHP_EOL
                                 );
                         }
                     })
