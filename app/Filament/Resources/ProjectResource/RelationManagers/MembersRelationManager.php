@@ -51,12 +51,16 @@ class MembersRelationManager extends RelationManager
                     ->after(function ($record) {
                         if ($record->chat_id) {
                             $ownerRecord = $this->getOwnerRecord();
-
+                            if (!empty($ownerRecord->start_date) && !empty($ownerRecord->end_date)) {
+                                $msg = '🆕 Вам добавлен новый участник в проект: ' . $ownerRecord->name . PHP_EOL .
+                                '📅 Дата начала: ' . $ownerRecord->start_date ? $ownerRecord?->start_date->format('d/m/Y') : 'Не указана' . PHP_EOL .
+                                    '📅 Дата окончания: ' . ($ownerRecord?->end_date ? $ownerRecord?->end_date->format('d/m/Y') : 'Не указана') . PHP_EOL;
+                            } else {
+                                 $msg = '🆕 Вам добавлен новый участник в проект: ' . $ownerRecord->name . PHP_EOL;
+                            }
                             app(InfoBot::class)
                                 ->send($record->chat_id,
-                                    '🆕 Вам добавлен новый участник в проект: ' . $ownerRecord->name . PHP_EOL .
-                                    '📅 Дата начала: ' . $ownerRecord->start_date ? $ownerRecord?->start_date->format('d/m/Y') : 'Не указана' . PHP_EOL .
-                                        '📅 Дата окончания: ' . ($ownerRecord?->end_date ? $ownerRecord?->end_date->format('d/m/Y') : 'Не указана') . PHP_EOL
+                                    $msg
                                 );
                         }
                     })
