@@ -18,7 +18,7 @@ class InfoBot
         $this->client = Http::baseUrl("https://api.telegram.org/bot{$token}");
     }
 
-    public function send(string $chat_id, string $text): \Illuminate\Http\Client\Response
+    public function send(string $chat_id, string $text, string $threadId = null): \Illuminate\Http\Client\Response
     {
         return $this->client
             ->post('/sendMessage', [
@@ -26,7 +26,8 @@ class InfoBot
                 'text' => mb_strcut($text, 0, 4096),
                 'disable_web_page_preview' => true,
                 'parse_mode' => 'HTML',
-                'disable_notification' => true
+                'disable_notification' => true,
+                'message_thread_id' => $threadId,
             ]);
     }
 

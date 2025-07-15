@@ -126,22 +126,22 @@ class CreateTicket extends CreateRecord
                 '👥 Исполнители: ' . ($assignees ?: 'Не назначены') . PHP_EOL;
             app(InfoBot::class)
                 ->send($ticket->project->chat_id,
-                    $text
+                    $text,
+                    $ticket->project->thread_id
                 );
-
-            if (!empty($assigneesChatIDs)) {
-                foreach ($assigneesChatIDs as $assigneesChatID) {
-                    app(InfoBot::class)
-                        ->send($assigneesChatID,
-                            '🆕 Вам назначена новая задача: ' . $ticket->name . PHP_EOL .
-                            '🆔 Проект: ' . $ticket->project->name . PHP_EOL .
-                            '👨‍💼 Создатель: ' . $ticket->creator->name . PHP_EOL .
-                            '❕ Статус: ' . $ticket->status->name . PHP_EOL .
-                            '🔖 Этап: ' . ($ticket->epic ? $ticket->epic->name : 'Не указан') . PHP_EOL .
-                            '⏰ Срок: ' . ($ticket->due_date ? $ticket->due_date->format('d.m.Y') : 'Не указан') . PHP_EOL .
-                            '‼️ Приоритет: ' . ($ticket->priority ? $ticket->priority->name : 'Не указан') . PHP_EOL
-                        );
-                }
+        }
+        if (!empty($assigneesChatIDs)) {
+            foreach ($assigneesChatIDs as $assigneesChatID) {
+                app(InfoBot::class)
+                    ->send($assigneesChatID,
+                        '🆕 Вам назначена новая задача: ' . $ticket->name . PHP_EOL .
+                        '🆔 Проект: ' . $ticket->project->name . PHP_EOL .
+                        '👨‍💼 Создатель: ' . $ticket->creator->name . PHP_EOL .
+                        '❕ Статус: ' . $ticket->status->name . PHP_EOL .
+                        '🔖 Этап: ' . ($ticket->epic ? $ticket->epic->name : 'Не указан') . PHP_EOL .
+                        '⏰ Срок: ' . ($ticket->due_date ? $ticket->due_date->format('d.m.Y') : 'Не указан') . PHP_EOL .
+                        '‼️ Приоритет: ' . ($ticket->priority ? $ticket->priority->name : 'Не указан') . PHP_EOL
+                    );
             }
         }
 

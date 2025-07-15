@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class ProjectResource extends Resource
 {
     protected static ?string $model = Project::class;
-    protected static ?string $label ='Проект';
+    protected static ?string $label = 'Проект';
     protected static ?string $pluralLabel = 'Проекты';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -38,7 +38,7 @@ class ProjectResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\DatePicker::make('start_date')
-                    ->label( __('start_date'))
+                    ->label(__('start_date'))
                     ->native(false)
                     ->displayFormat('d/m/Y'),
                 Forms\Components\DatePicker::make('end_date')
@@ -54,7 +54,17 @@ class ProjectResource extends Resource
                     ->visible(fn($livewire) => $livewire instanceof Pages\CreateProject),
                 Forms\Components\TextInput::make('chat_id')
                     ->label('Телеграм Чат ID')
+                    ->helperText('Для вашей нужной группы
+Добавьте бота @myidbot и из этой группы
+Вы отправляете команду /getgroupid и получаете ID группы, который нужно указать здесь')
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('thread_id')
+                    ->label('Телеграм Чат Тема ID')
+                    ->helperText('Вы присоединитесь к соответствующей группе Chat ID, указанной выше, и выберите в ней тему, которая вам принадлежит, чтобы скопировать ссылку на любое сообщение, и ссылка будет выглядеть так:
+https://t.me/c/2535102279/3/60 и номер 3 в нем является идентификатором этой темы.
+https://t.me/c/2535102279/Нам нужен ID/60')
                     ->maxLength(255)
+
             ]);
     }
 

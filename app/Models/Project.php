@@ -18,7 +18,8 @@ class Project extends Model
         'ticket_prefix',
         'chat_id',
         'start_date',
-        'end_date'
+        'end_date',
+        'thread_id',
     ];
 
 

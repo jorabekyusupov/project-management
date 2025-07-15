@@ -18,7 +18,8 @@ class EditProfile  extends BaseEditProfile
                 TextInput::make('chat_id')
                     ->label(__('Телеграм Чат ID'))
                     ->maxLength(255)
-                    ->helperText(__('Укажите ваш Telegram Chat ID, если вы хотите получать уведомления в Telegram.')),
+                    ->helperText(__('Укажите ваш Telegram Chat ID, если вы хотите получать уведомления в Telegram. Чтобы узнать ваш чат-идентификатор, посетите @myidbot
+Если вы отправите команду /getid, она отправит вам ваш чат-идентификатор.')),
             ]);
     }
 }
