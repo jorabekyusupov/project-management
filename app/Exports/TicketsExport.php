@@ -17,15 +17,15 @@ class TicketsExport implements FromCollection, WithHeadings, WithMapping, WithSt
     protected $selectedColumns;
     protected $availableColumns = [
         'uuid' => 'Ticket ID',
-        'name' => 'Title',
-        'description' => 'Description',
-        'status' => 'Status',
-        'assignee' => 'Assignee',
-        'project' => 'Project',
-        'epic' => 'Epic',
+        'name' => 'title',
+        'description' => 'description',
+        'status' => 'status',
+        'assignee' => 'assignee',
+        'project' => 'project',
+        'epic' => 'epic',
         'due_date' => 'Due Date',
-        'created_at' => 'Created At',
-        'updated_at' => 'Updated At',
+        'created_at' => 'Created at',
+        'updated_at' => 'Updated at',
     ];
 
     public function __construct(Collection $tickets, array $selectedColumns)
@@ -44,7 +44,7 @@ class TicketsExport implements FromCollection, WithHeadings, WithMapping, WithSt
         $headings = [];
         foreach ($this->selectedColumns as $column) {
             if (isset($this->availableColumns[$column])) {
-                $headings[] = $this->availableColumns[$column];
+                $headings[] = __($this->availableColumns[$column]);
             }
         }
         return $headings;

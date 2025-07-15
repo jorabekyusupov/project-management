@@ -54,7 +54,7 @@
                         </div>
                         
                         <div class="text-xs text-gray-400 mt-1 flex items-center gap-x-1">
-                            <span>Updated by: {{ $history->user->name ?? 'System' }}</span>
+                            <span>{{__("Updated by")}}: {{ $history->user->name ?? 'System' }}</span>
                             <span class="text-gray-300 mx-1">•</span>
                             <span>{{ $history->created_at->format('d M H:i') }}</span>
                         </div>

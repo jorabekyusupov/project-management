@@ -5,7 +5,7 @@
         <x-filament::section>
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <h2 class="text-lg font-medium text-gray-900 dark:text-white">
-                    {{ $selectedProject ? $selectedProject->name : 'Select Project' }}
+                    {{ $selectedProject ? $selectedProject->name : __('Select Project') }}
                 </h2>
                 
                 <div class="w-full sm:w-auto">
@@ -14,7 +14,7 @@
                             wire:model.live="selectedProjectId"
                             class="w-full"
                         >
-                            <option value="">Select Project</option>
+                            <option value="">{{__('Select Project')}}</option>
                             @foreach($projects as $project)
                                 <option value="{{ $project->id }}" {{ $selectedProjectId == $project->id ? 'selected' : '' }}>
                                     {{ $project->name }}
@@ -378,7 +378,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
-                <span>Swipe horizontally to view all columns</span>
+                <span>{{__('Swipe horizontally to view all columns')}}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
@@ -455,7 +455,7 @@
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 dark:text-gray-500 mr-1 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                                                     <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                                                 </svg>
-                                                <span class="text-xs font-medium">Unassigned</span>
+                                                <span class="text-xs font-medium">{{__('Unassigned')}}</span>
                                             </div>
                                         @endif
                                         
@@ -472,7 +472,7 @@
                             
                             @if ($status->tickets->isEmpty())
                                 <div class="flex items-center justify-center h-24 text-gray-500 dark:text-gray-400 text-sm italic border border-dashed border-gray-300 dark:border-gray-700 rounded-lg">
-                                    No tickets
+                                    {{__('No tickets')}}
                                 </div>
                             @endif
                         </div>
@@ -481,7 +481,7 @@
                 
                 @if ($ticketStatuses->isEmpty())
                     <div class="w-full flex items-center justify-center h-40 text-gray-500 dark:text-gray-400">
-                        No status columns found for this project
+                       {{__('No status columns found for this project')}}
                     </div>
                 @endif
             </div>
@@ -491,9 +491,9 @@
             <div class="flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 p-6">
                 <x-heroicon-o-view-columns class="w-16 h-16 text-gray-400 dark:text-gray-500" />
             </div>
-            <h2 class="text-xl font-medium text-gray-600 dark:text-gray-300">Please select a project first</h2>
+            <h2 class="text-xl font-medium text-gray-600 dark:text-gray-300">{{__('Please select a project first')}}</h2>
             <p class="text-sm text-gray-500 dark:text-gray-400">
-                Select a project from the dropdown above to view the board
+                {{__('Select a project from the dropdown above to view the board')}}
             </p>
         </div>
     @endif

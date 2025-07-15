@@ -4,7 +4,7 @@
         <x-filament::section>
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <h2 class="text-lg font-medium text-gray-900 dark:text-white">
-                    {{ $selectedProjectId ? $availableProjects->firstWhere('id', $selectedProjectId)?->name : 'Select Project' }}
+                    {{ $selectedProjectId ? $availableProjects->firstWhere('id', $selectedProjectId)?->name :__('Select Project') }}
                 </h2>
                 
                 <div class="w-full sm:w-auto">
@@ -13,7 +13,7 @@
                             wire:model.live="selectedProjectId"
                             class="w-full"
                         >
-                            <option value="">Select Project</option>
+                            <option value="">{{__('Select Project')}}</option>
                             @foreach($availableProjects as $project)
                                 <option value="{{ $project->id }}" {{ $selectedProjectId == $project->id ? 'selected' : '' }}>
                                     {{ $project->name }}
@@ -29,7 +29,7 @@
     @if($selectedProjectId && $epics->isNotEmpty())
         <x-filament::section>
             <x-slot name="heading">
-                Epics Overview
+               {{__('Epics Overview')}}
             </x-slot>
             
             <div class="w-full space-y-3">
@@ -50,7 +50,7 @@
                             </div>
                             <div class="flex items-center space-x-4">
                                 <div class="bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-gray-300 text-sm rounded-full px-3 py-1">
-                                    {{ $epic->tickets->count() }} tickets
+                                    {{ $epic->tickets->count() }} {{__('tickets')}}
                                 </div>
                                 <button class="text-gray-400 hover:text-primary-500 focus:outline-none">
                                     @if($this->isExpanded($epic->id))
@@ -68,7 +68,7 @@
                                 <!-- Epic Description -->
                                 @if($epic->description)
                                     <div class="mb-4">
-                                        <h4 class="text-sm font-medium text-gray-900 dark:text-gray-300 mb-2">Description</h4>
+                                        <h4 class="text-sm font-medium text-gray-900 dark:text-gray-300 mb-2">{{__('description')}}</h4>
                                         <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-md text-sm text-gray-900 dark:text-gray-300">
                                             {!! $epic->description !!}
                                         </div>
@@ -78,10 +78,10 @@
                                 <!-- Tickets -->
                                 <div class="w-full">
                                     <div class="flex justify-between items-center mb-2">
-                                        <h4 class="text-sm font-medium text-gray-900 dark:text-gray-300">Tickets</h4>
+                                        <h4 class="text-sm font-medium text-gray-900 dark:text-gray-300">{{__('tickets')}}</h4>
                                         <a href="{{ route('filament.admin.resources.tickets.create', ['epic_id' => $epic->id]) }}" class="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300">
                                             <x-heroicon-s-plus class="w-4 h-4 inline-block mr-1" />
-                                            Add Ticket
+                                            {{__('Add Ticket')}}
                                         </a>
                                     </div>
                                     
@@ -100,7 +100,7 @@
                                                         <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden sm:table-cell">Assign To</th>
                                                         <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell">Due Date</th>
                                                         <th scope="col" class="relative px-3 py-2">
-                                                            <span class="sr-only">Actions</span>
+                                                            <span class="sr-only">{{__('Actions')}}</span>
                                                         </th>
                                                     </tr>
                                                 </thead>
@@ -122,13 +122,13 @@
                                                                         'Done' => 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
                                                                         default => 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200',
                                                                     } }}">
-                                                                    {{ $ticket->status->name ?? 'No Status' }}
+                                                                    {{ $ticket->status->name ?? __('No Status') }}
                                                                 </span>
                                                             </td>
                                                             <td class="px-3 py-2 text-xs text-gray-500 dark:text-gray-400 hidden sm:table-cell">
                                                                 @if($ticket->assignees->isEmpty())
                                                                     <x-filament::badge color="gray" icon="heroicon-m-user-minus">
-                                                                        Unassigned
+                                                                        {{__('Unassigned')}}
                                                                     </x-filament::badge>
                                                                 @else
                                                                     <div class="flex flex-wrap gap-1">
@@ -160,7 +160,7 @@
                                                             <td class="px-3 py-2 whitespace-nowrap text-right text-xs font-medium">
                                                               
                                                                 <a href="{{ route('filament.admin.resources.tickets.view', ['record' => $ticket->id]) }}" target="_blank" class="text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300">
-                                                                    View
+                                                                    {{__('view')}}
                                                                 </a>
                                                             </td>
                                                         </tr>
@@ -182,9 +182,9 @@
             <div class="flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 p-6">
                 <x-heroicon-o-flag class="w-16 h-16 text-gray-400 dark:text-gray-500" />
             </div>
-            <h2 class="text-xl font-medium text-gray-600 dark:text-gray-300">No epics found in this project</h2>
+            <h2 class="text-xl font-medium text-gray-600 dark:text-gray-300">{{__('No epics found in this project')}}</h2>
             <p class="text-sm text-gray-500 dark:text-gray-400">
-                This project doesn't have any epics yet. Create an epic to organize your tickets.
+                {{__("This project doesn't have any epics yet. Create an epic to organize your tickets.")}}
             </p>
         </div>
     @else
@@ -193,9 +193,9 @@
             <div class="flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 p-6">
                 <x-heroicon-o-flag class="w-16 h-16 text-gray-400 dark:text-gray-500" />
             </div>
-            <h2 class="text-xl font-medium text-gray-600 dark:text-gray-300">Please select a project first</h2>
+            <h2 class="text-xl font-medium text-gray-600 dark:text-gray-300">{{__('Please select a project first')}}</h2>
             <p class="text-sm text-gray-500 dark:text-gray-400">
-                Select a project from the dropdown above to view its epics
+                {{__('Select a project from the dropdown above to view its epics')}}
             </p>
         </div>
     @endif

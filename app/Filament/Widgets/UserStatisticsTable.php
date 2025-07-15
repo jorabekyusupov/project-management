@@ -12,8 +12,12 @@ use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 class UserStatisticsTable extends BaseWidget
 {
     use HasWidgetShield;
-    
-    protected static ?string $heading = 'User Statistics';
+
+    public function getTableHeading():string
+    {
+
+        return __('User Statistics');
+    }
     
     protected int | string | array $columnSpan = [
         'md' => 2,
@@ -38,14 +42,14 @@ class UserStatisticsTable extends BaseWidget
             )
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('User')
+                    ->label(__('user'))
                     ->searchable()
                     ->sortable()
                     ->weight('medium')
                     ->icon('heroicon-o-user'),
                 
                 Tables\Columns\TextColumn::make('total_projects')
-                    ->label('Total Projects')
+                    ->label(__('Total Projects'))
                     ->alignCenter()
                     ->sortable()
                     ->badge()
@@ -57,7 +61,7 @@ class UserStatisticsTable extends BaseWidget
                     }),
                 
                 Tables\Columns\TextColumn::make('total_assigned_tickets')
-                    ->label('Total Tickets')
+                    ->label(__('Total Tickets'))
                     ->alignCenter()
                     ->sortable()
                     ->badge()
@@ -69,7 +73,7 @@ class UserStatisticsTable extends BaseWidget
                     }),
                 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Joined')
+                    ->label(__('Joined'))
                     ->date('M d, Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

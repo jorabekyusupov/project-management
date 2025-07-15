@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\TicketHistory;
+use Filament\Actions\Action;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -12,8 +13,14 @@ class RecentActivityTable extends BaseWidget
 {
     use HasWidgetShield;
 
-    protected static ?string $heading = 'Recent Activities';
-    
+
+
+    public function getTableHeading(): ?string
+    {
+      return  __('Recent Activities');
+    }
+
+
     protected int | string | array $columnSpan = [
         'md' => 2,
         'xl' => 1,
@@ -38,10 +45,10 @@ class RecentActivityTable extends BaseWidget
                 Tables\Columns\TextColumn::make('activity_summary')
                     ->label('Activity')
                     ->state(function (TicketHistory $record): string {
-                        $ticketName = $record->ticket->name ?? 'Unknown ticket';
+                        $ticketName = $record->ticket->name ?? __('Unknown ticket');
                         $trimmedName = strlen($ticketName) > 40 ? substr($ticketName, 0, 40) . '...' : $ticketName;
-                        $userName = $record->user->name ?? 'Unknown user';
-                        return "<span class='text-primary-600 font-medium'>{$userName}</span> changed \"{$trimmedName}\"";
+                        $userName = $record->user->name ?? __('Unknown user');
+                        return "<span class='text-primary-600 font-medium'>{$userName}</span> изменено \"{$trimmedName}\"";
                     })
                     ->description(function (TicketHistory $record): string {
                         $isToday = $record->created_at->isToday();
@@ -91,16 +98,16 @@ class RecentActivityTable extends BaseWidget
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
                         if ($data['start_date'] ?? null) {
-                            $indicators[] = 'From: ' . \Carbon\Carbon::parse($data['start_date'])->format('M d, Y');
+                            $indicators[] = __("From").": " . \Carbon\Carbon::parse($data['start_date'])->format('M d, Y');
                         }
                         if ($data['end_date'] ?? null) {
-                            $indicators[] = 'To: ' . \Carbon\Carbon::parse($data['end_date'])->format('M d, Y');
+                            $indicators[] = __("To").": ". \Carbon\Carbon::parse($data['end_date'])->format('M d, Y');
                         }
                         return $indicators;
                     }),
 
                 Tables\Filters\Filter::make('today')
-                    ->label('Today Only')
+                    ->label(__('Today Only'))
                     ->query(fn ($query) => $query->whereDate('created_at', today()))
                     ->toggle(),
 
@@ -115,7 +122,7 @@ class RecentActivityTable extends BaseWidget
                     ->label('')
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->size('sm')
-                    ->tooltip('Open Ticket')
+                    ->tooltip(__('Open Ticket'))
                     ->url(fn (TicketHistory $record): string => 
                         route('filament.admin.resources.tickets.view', $record->ticket)
                     )
@@ -127,8 +134,8 @@ class RecentActivityTable extends BaseWidget
             ->paginated([5, 25, 50])
             ->poll('30s')
             ->striped()
-            ->emptyStateHeading('No Activity Found')
-            ->emptyStateDescription('No ticket activities found for the selected period.')
+            ->emptyStateHeading(__('No Activity Found'))
+            ->emptyStateDescription(__('No ticket activities found for the selected period.'))
             ->emptyStateIcon('heroicon-o-clock');
     }
 }

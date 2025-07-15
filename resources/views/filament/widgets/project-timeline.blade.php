@@ -4,7 +4,7 @@
             <!-- Header dengan Filter -->
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                 <x-filament::section.heading>
-                    Project Timeline
+                   {{__('Project Timeline')}}
                 </x-filament::section.heading>
                 
                 <!-- Filter Buttons -->
@@ -15,7 +15,7 @@
                         :outlined="$filter !== 'active'"
                         size="sm"
                     >
-                        Active Projects
+                        {{__('active_projects')}}
                         <x-filament::badge
                             :color="$filter === 'active' ? 'primary' : 'gray'"
                             size="sm"
@@ -31,7 +31,7 @@
                         :outlined="$filter !== 'all'"
                         size="sm"
                     >
-                        All Projects
+                        {{__('all_projects')}}
                         <x-filament::badge
                             :color="$filter === 'all' ? 'primary' : 'gray'"
                             size="sm"
@@ -52,17 +52,17 @@
                     
                     <h3 class="mt-4 text-sm font-medium text-gray-900 dark:text-white">
                         @if($filter === 'active')
-                            No active projects
+                            {{__('no_active_projects')}}
                         @else
-                            No projects found
+                            {{__('no_projects_found')}}
                         @endif
                     </h3>
                     
                     <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 text-center max-w-sm">
                         @if($filter === 'active')
-                            All your projects have been completed or you don't have access to any active projects.
+                            {{__("All your projects have been completed or you don't have access to any active projects.")}}
                         @else
-                            Create a new project or check your project permissions.
+                            {{__("Create a new project or check your project permissions.")}}
                         @endif
                     </p>
                 </div>
@@ -100,7 +100,7 @@
                                         {{ $project['start_date'] }} - {{ $project['end_date'] }}
                                     </div>
                                     <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        {{ $project['total_days'] }} total days
+                                        {{ $project['total_days'] }} {{__('total_days')}}
                                     </div>
                                 </div>
                             </div>
@@ -127,7 +127,7 @@
                                         @if($project['past_days'] > 0)
                                             <div class="text-gray-600 dark:text-gray-400">
                                                 <span class="font-medium">{{ $project['past_days'] }}</span>
-                                                {{ Str::plural('day', $project['past_days']) }} completed
+                                                {{ __(Str::plural('day', $project['past_days'])) }} {{__('completed')}}
                                             </div>
                                         @endif
                                     </div>
@@ -135,11 +135,11 @@
                                     <div class="text-right">
                                         @if($project['remaining_days'] > 0)
                                             <div class="font-medium text-gray-900 dark:text-white">
-                                                {{ $project['remaining_days'] }} {{ Str::plural('day', $project['remaining_days']) }} remaining
+                                                {{ $project['remaining_days'] }} {{ Str::plural('day', $project['remaining_days']) }} {{__('remaining')}}
                                             </div>
                                         @elseif($project['remaining_days'] < 0)
                                             <div class="font-medium text-red-600 dark:text-red-400">
-                                                {{ abs($project['remaining_days']) }} {{ Str::plural('day', abs($project['remaining_days'])) }} overdue
+                                                {{ abs($project['remaining_days']) }} {{ Str::plural('day', abs($project['remaining_days'])) }} {{__('overdue')}}
                                             </div>
                                         @else
                                             <div class="font-medium text-amber-600 dark:text-amber-400">

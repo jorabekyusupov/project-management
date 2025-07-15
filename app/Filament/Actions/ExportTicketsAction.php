@@ -15,26 +15,26 @@ class ExportTicketsAction
     public static function make(): Action
     {
         return Action::make('export_tickets')
-            ->label('Export to Excel')
+            ->label(__("Export to Excel"))
             ->icon('heroicon-m-arrow-down-tray')
             ->color('success')
             ->form([
-                Section::make('Select Columns to Export')
-                    ->description('Choose which columns you want to include in the Excel export')
+                Section::make(__('Select Columns to Export'))
+                    ->description(__('Choose which columns you want to include in the Excel export'))
                     ->schema([
                         CheckboxList::make('columns')
-                            ->label('Columns')
+                            ->label(__('Columns'))
                             ->options([
-                                'uuid' => 'Ticket ID',
-                                'name' => 'Title',
-                                'description' => 'Description',
-                                'status' => 'Status',
-                                'assignee' => 'Assignee',
-                                'project' => 'Project',
-                                'epic' => 'Epic',
-                                'due_date' => 'Due Date',
-                                'created_at' => 'Created At',
-                                'updated_at' => 'Updated At',
+                                'uuid' => __('Ticket ID'),
+                                'name' => __('title'),
+                                'description' => __('description'),
+                                'status' => __('status'),
+                                'assignee' => __('assignee'),
+                                'project' => __('project'),
+                                'epic' => __('epic'),
+                                'due_date' => __('Due Date'),
+                                'created_at' => __('Created at'),
+                                'updated_at' => __('Updated at'),
                             ])
                             ->default(['uuid', 'name', 'status', 'assignee', 'due_date', 'created_at'])
                             ->required()
