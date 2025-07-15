@@ -37,7 +37,11 @@ class Project extends Model
     {
         return $this->hasMany(Ticket::class);
     }
-
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'project_members')
+            ->withTimestamps();
+    }
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'project_members')
