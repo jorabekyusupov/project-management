@@ -15,7 +15,7 @@ class EpicsOverview extends Page
 
     protected static string $view = 'filament.pages.epics-overview';
 
-    protected static ?string $navigationGroup = 'Project Management';
+    protected static ?string $navigationGroup = 'Управление проектами';
 
     protected static ?string $title = 'Этапы проекта';
     protected static ?string $navigationLabel = 'Этапы';

@@ -140,5 +140,12 @@
   "created_at": "создано в",
     "updated_at": "обновлено в",
   "Update Priority": "Обновить приоритет",
-  "Assign Users": "Назначить пользователей"
+  "Assign Users": "Назначить пользователей",
+  "Email Verified At": "Электронная почта подтверждена в",
+  "Has Projects": "Имеет проекты",
+  "Has Assigned Tickets": "Имеет назначенные задания",
+  "Has Created Tickets": "Имеет созданные задания",
+  "Email Unverified": "Электронная почта не подтверждена",
+  "Due From": "Срок выполнения с",
+  "Due Until": "Срок выполнения до"
 }

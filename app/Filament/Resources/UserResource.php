@@ -101,41 +101,45 @@ class UserResource extends Resource
 
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()
+                    ->label(__('Email Verified At'))
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
+                    ->label(__('Created at'))
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
+                    ->label(__('Updated at'))
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\Filter::make('has_projects')
-                    ->label('Has Projects')
+                    ->label(__('Has Projects'))
                     ->query(fn (Builder $query): Builder => $query->whereHas('projects')),
 
                 Tables\Filters\Filter::make('has_assigned_tickets')
-                    ->label('Has Assigned Tickets')
+                    ->label(__('Has Assigned Tickets'))
                     ->query(fn (Builder $query): Builder => $query->whereHas('assignedTickets')),
 
                 Tables\Filters\Filter::make('has_created_tickets')
-                    ->label('Has Created Tickets')
+                    ->label(__('Has Created Tickets'))
                     ->query(fn (Builder $query): Builder => $query->whereHas('createdTickets')),
 
                 // Filter by role
                 Tables\Filters\SelectFilter::make('roles')
                     ->relationship('roles', 'name')
+                    ->label(__('roles'))
                     ->multiple()
                     ->searchable()
                     ->preload(),
 
                 Tables\Filters\Filter::make('email_unverified')
-                    ->label('Email Unverified')
+                    ->label(__('Email Unverified'))
                     ->query(fn (Builder $query): Builder => $query->whereNull('email_verified_at')),
             ])
             ->actions([

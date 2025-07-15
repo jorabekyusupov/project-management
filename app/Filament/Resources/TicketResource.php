@@ -27,7 +27,7 @@ class TicketResource extends Resource
     protected static ?string $label = 'Задача';
 
 
-    protected static ?string $navigationGroup = 'Project Management';
+    protected static ?string $navigationGroup = 'Управление проектами';
 
     public static function getEloquentQuery(): Builder
     {
@@ -310,8 +310,10 @@ class TicketResource extends Resource
                 Tables\Filters\Filter::make('due_date')
                     ->label(__('Due Date'))
                     ->form([
-                        Forms\Components\DatePicker::make('due_from'),
-                        Forms\Components\DatePicker::make('due_until'),
+                        Forms\Components\DatePicker::make('due_from')
+                        ->label(__('Due From')),
+                        Forms\Components\DatePicker::make('due_until')
+                            ->label(__('Due Until')),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query

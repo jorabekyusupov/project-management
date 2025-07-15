@@ -21,7 +21,7 @@ class TicketTimeline extends Page
 
     protected static string $view = 'filament.pages.ticket-timeline';
 
-    protected static ?string $navigationGroup = 'Project Management';
+    protected static ?string $navigationGroup = 'Управление проектами';
 
     public ?string $projectId = null;
 

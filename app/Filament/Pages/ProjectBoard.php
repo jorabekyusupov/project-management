@@ -26,7 +26,7 @@ class ProjectBoard extends Page
 
     protected static ?string $navigationLabel = 'Доска проектов';
 
-    protected static ?string $navigationGroup = 'Project Management';
+    protected static ?string $navigationGroup = 'Управление проектами';
 
     protected static ?int $navigationSort = 2;
 
