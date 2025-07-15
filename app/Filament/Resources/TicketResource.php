@@ -237,12 +237,13 @@ class TicketResource extends Resource
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
+                    ->label(__('Created at'))
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('project_id')
-                    ->label('Project')
+                    ->label(__('project'))
                     ->options(function () {
                         if (auth()->user()->hasRole(['super_admin'])) {
                             return Project::pluck('name', 'id')->toArray();
@@ -254,7 +255,7 @@ class TicketResource extends Resource
                     ->preload(),
             
                 Tables\Filters\SelectFilter::make('ticket_status_id')
-                    ->label('Status')
+                    ->label(__('status'))
                     ->options(function () {
                         $projectId = request()->input('tableFilters.project_id');
                         
@@ -270,7 +271,7 @@ class TicketResource extends Resource
                     ->preload(),
                     
                 Tables\Filters\SelectFilter::make('epic_id')
-                    ->label('Epic')
+                    ->label(__('epic'))
                     ->options(function () {
                         $projectId = request()->input('tableFilters.project_id');
                         
@@ -286,14 +287,14 @@ class TicketResource extends Resource
                     ->preload(),
 
                 Tables\Filters\SelectFilter::make('priority_id')
-                    ->label('Priority')
+                    ->label(__('priority'))
                     ->options(TicketPriority::pluck('name', 'id')->toArray())
                     ->searchable()
                     ->preload(),
 
                 // Filter by assignees
                 Tables\Filters\SelectFilter::make('assignees')
-                    ->label('Assignee')
+                    ->label(__('Assign To'))
                     ->relationship('assignees', 'name')
                     ->multiple()
                     ->searchable()
@@ -301,12 +302,13 @@ class TicketResource extends Resource
 
                 // Filter by creator
                 Tables\Filters\SelectFilter::make('created_by')
-                    ->label('Created By')
+                    ->label(__('Created By'))
                     ->relationship('creator', 'name')
                     ->searchable()
                     ->preload(),
             
                 Tables\Filters\Filter::make('due_date')
+                    ->label(__('Due Date'))
                     ->form([
                         Forms\Components\DatePicker::make('due_from'),
                         Forms\Components\DatePicker::make('due_until'),
@@ -334,7 +336,7 @@ class TicketResource extends Resource
                         ->visible(auth()->user()->hasRole(['super_admin'])),
 
                     Tables\Actions\BulkAction::make('updateStatus')
-                        ->label('Update Status')
+                        ->label(__('Update Status'))
                         ->icon('heroicon-o-arrow-path')
                         ->form([
                             Forms\Components\Select::make('ticket_status_id')
@@ -360,7 +362,7 @@ class TicketResource extends Resource
                         }),
 
                     Tables\Actions\BulkAction::make('updatePriority')
-                        ->label('Update Priority')
+                        ->label(__('Update Priority'))
                         ->icon('heroicon-o-flag')
                         ->form([
                             Forms\Components\Select::make('priority_id')
@@ -378,7 +380,7 @@ class TicketResource extends Resource
 
                     // New bulk action for assigning users
                     Tables\Actions\BulkAction::make('assignUsers')
-                        ->label('Assign Users')
+                        ->label(__('Assign Users'))
                         ->icon('heroicon-o-user-plus')
                         ->form([
                             Forms\Components\Select::make('assignees')
@@ -405,7 +407,7 @@ class TicketResource extends Resource
                                 ->required(),
                             
                             Forms\Components\Radio::make('assignment_mode')
-                                ->label('Assignment Mode')
+                                ->label(__('Assignment Mode'))
                                 ->options([
                                     'replace' => 'Replace existing assignees',
                                     'add' => 'Add to existing assignees',

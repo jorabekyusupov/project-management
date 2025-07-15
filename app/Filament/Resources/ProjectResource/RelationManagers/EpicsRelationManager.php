@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
 class EpicsRelationManager extends RelationManager
 {
     protected static string $relationship = 'epics';
+    protected static ?string $label = 'Этапы';
+    protected static ?string $title = 'Этапы';
 
     public static function getBadge(Model $ownerRecord, string $pageClass): ?string
     {
@@ -25,14 +27,15 @@ class EpicsRelationManager extends RelationManager
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255)
-                    ->label('Epic Name'),
+                    ->label(__('Epic Name')),
                 Forms\Components\DatePicker::make('start_date')
-                    ->label('Start Date')
+                    ->label(__('Start Date'))
                     ->nullable(),
                 Forms\Components\DatePicker::make('end_date')
-                    ->label('End Date')
+                    ->label(__('End Date'))
                     ->nullable(),
                 Forms\Components\RichEditor::make('description')
+                    ->label(__('description'))
                     ->columnSpanFull()
                     ->nullable(),
             ]);
@@ -44,17 +47,22 @@ class EpicsRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Epic Name')
+                    ->translateLabel()
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('start_date')
+                    ->label('Start Date')
+                    ->translateLabel()
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('end_date')
+                    ->label(__('End Date'))
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tickets_count')
                     ->counts('tickets')
-                    ->label('Tickets'),
+                    ->label(__('tickets')),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

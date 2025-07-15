@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Builder;
 class TicketsRelationManager extends RelationManager
 {
     protected static string $relationship = 'tickets';
+    protected static ?string $title = 'Задачи';
+
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -20,6 +22,7 @@ class TicketsRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label(__('name'))
                     ->required()
                     ->maxLength(255),
             ]);
@@ -30,23 +33,23 @@ class TicketsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('uuid')
-                    ->label('Ticket ID')
+                    ->label(__('Ticket ID'))
                     ->searchable()
                     ->copyable(),
 
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Ticket Name')
+                    ->label(__('name'))
                     ->searchable()
                     ->sortable()
                     ->limit(30),
 
                 Tables\Columns\TextColumn::make('project.name')
-                    ->label('Project')
+                    ->label(__('project'))
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('status.name')
-                    ->label('Status')
+                    ->label(__('status'))
                     ->badge()
                     ->color(fn ($record) => match ($record->status?->name) {
                         'To Do' => 'warning',
@@ -58,11 +61,12 @@ class TicketsRelationManager extends RelationManager
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('due_date')
-                    ->label('Due Date')
+                    ->label(__('Due Date'))
                     ->date()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('Created at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -70,11 +74,13 @@ class TicketsRelationManager extends RelationManager
             ->filters([
                 Tables\Filters\SelectFilter::make('project')
                     ->relationship('project', 'name')
+                    ->label(__('project'))
                     ->searchable()
                     ->preload(),
 
                 Tables\Filters\SelectFilter::make('status')
                     ->relationship('status', 'name')
+                    ->label(__('status'))
                     ->searchable()
                     ->preload(),
 

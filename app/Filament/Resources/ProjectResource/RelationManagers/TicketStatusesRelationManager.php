@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class TicketStatusesRelationManager extends RelationManager
 {
     protected static string $relationship = 'ticketStatuses';
+    protected static ?string $title = 'Статусы';
 
     public static function getBadge(Model $ownerRecord, string $pageClass): ?string
     {
@@ -23,16 +24,18 @@ class TicketStatusesRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label('Название статуса')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\ColorPicker::make('color')
+                    ->label('Цвет статуса')
                     ->required()
                     ->default('#3490dc')
-                    ->helperText('Select a color for this status'),
+                    ->helperText('Выберите цвет для статуса. Он будет использоваться для визуального обозначения статуса в проектной доске.'),
                 Forms\Components\TextInput::make('sort_order')
                     ->numeric()
                     ->default(0)
-                    ->helperText('Determines display order in the project board (lower values appear first)'),
+                    ->helperText('Порядок сортировки статусов. Чем меньше значение, тем выше статус будет отображаться в списке.')
             ]);
     }
 
@@ -41,9 +44,12 @@ class TicketStatusesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\ColorColumn::make('color'),
-                Tables\Columns\TextColumn::make('sort_order'),
+                Tables\Columns\TextColumn::make('name')
+                ->label('Название статуса'),
+                Tables\Columns\ColorColumn::make('color')
+                ->label('Цвет статуса'),
+                Tables\Columns\TextColumn::make('sort_order')
+                ->label('Порядок сортировки'),
             ])
             ->defaultSort('sort_order')
             ->reorderable('sort_order')

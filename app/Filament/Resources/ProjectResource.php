@@ -83,7 +83,7 @@ class ProjectResource extends Resource
                             return null;
                         }
 
-                        return $record->remaining_days . ' days';
+                        return $record->remaining_days . ' ' . __('days');
                     })
                     ->badge()
                     ->color(fn(Project $record): string => !$record->end_date ? 'gray' :
@@ -97,10 +97,12 @@ class ProjectResource extends Resource
                     ->counts('tickets')
                     ->label(__('tickets')),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('Created at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('Updated at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

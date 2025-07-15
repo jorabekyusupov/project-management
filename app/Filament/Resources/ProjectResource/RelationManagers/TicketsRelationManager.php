@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 class TicketsRelationManager extends RelationManager
 {
     protected static string $relationship = 'tickets';
+    protected static ?string $title = 'Задачи';
 
     public static function getBadge(Model $ownerRecord, string $pageClass): ?string
     {
@@ -32,12 +33,13 @@ class TicketsRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+
                     ->required()
                     ->maxLength(255)
-                    ->label('Ticket Name'),
+                    ->label(__('Ticket Name')),
                 
                 Forms\Components\Select::make('ticket_status_id')
-                    ->label('Status')
+                    ->label(__('status'))
                     ->options(function () use ($projectId) {
                         return TicketStatus::where('project_id', $projectId)
                             ->pluck('name', 'id')
@@ -48,7 +50,7 @@ class TicketsRelationManager extends RelationManager
                     ->searchable(),
                 
                 Forms\Components\Select::make('epic_id')
-                    ->label('Epic')
+                    ->label(__('epic'))
                     ->options(function () use ($projectId) {
                         return Epic::where('project_id', $projectId)
                             ->pluck('name', 'id')
@@ -58,7 +60,7 @@ class TicketsRelationManager extends RelationManager
                 
                 // UPDATED: Multi-user assignment
                 Forms\Components\Select::make('assignees')
-                    ->label('Assignees')
+                    ->label(__('assignee'))
                     ->multiple()
                     ->relationship(
                         name: 'assignees',
@@ -84,19 +86,20 @@ class TicketsRelationManager extends RelationManager
                         
                         return $isCurrentUserMember ? [auth()->id()] : [];
                     })
-                    ->helperText('Select multiple users to assign this ticket to. Only project members can be assigned.'),
+                    ->helperText(__('Select multiple users to assign this ticket to. Only project members can be assigned.')),
                 
                 Forms\Components\DatePicker::make('due_date')
-                    ->label('Due Date')
+                    ->label(__('Due Date'))
                     ->nullable(),
-                
+
                 Forms\Components\RichEditor::make('description')
+                    ->label(__('description'))
                     ->columnSpanFull()
                     ->nullable(),
 
                 // Show created by in edit mode
                 Forms\Components\Select::make('created_by')
-                    ->label('Created By')
+                    ->label(__('Created By'))
                     ->relationship('creator', 'name')
                     ->disabled()
                     ->hiddenOn('create'),
@@ -110,16 +113,19 @@ class TicketsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('uuid')
                     ->label('Ticket ID')
+                    ->translateLabel()
                     ->searchable()
                     ->sortable()
                     ->copyable(),
                 
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('name'))
                     ->searchable()
                     ->sortable(),
                 
                 Tables\Columns\TextColumn::make('status.name')
                     ->badge()
+                    ->label(__('status'))
                     ->color(fn ($record) => match ($record->status?->name) {
                         'To Do' => 'warning',
                         'In Progress' => 'info',
@@ -131,7 +137,7 @@ class TicketsRelationManager extends RelationManager
                 
                 // UPDATED: Display multiple assignees
                 Tables\Columns\TextColumn::make('assignees.name')
-                    ->label('Assignees')
+                    ->label(__('assignees'))
                     ->badge()
                     ->separator(',')
                     ->expandableLimitedList()
@@ -139,21 +145,24 @@ class TicketsRelationManager extends RelationManager
                 
                 Tables\Columns\TextColumn::make('creator.name')
                     ->label('Created By')
+                    ->translateLabel()
                     ->sortable()
                     ->toggleable(),
                 
                 Tables\Columns\TextColumn::make('due_date')
+                    ->label(__('Due Date'))
                     ->date()
                     ->sortable(),
                 
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('Created at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('ticket_status_id')
-                    ->label('Status')
+                    ->label(__('status'))
                     ->options(function () {
                         $projectId = $this->getOwnerRecord()->id;
 
@@ -164,7 +173,7 @@ class TicketsRelationManager extends RelationManager
                 
                 // UPDATED: Filter by assignees
                 Tables\Filters\SelectFilter::make('assignees')
-                    ->label('Assignee')
+                    ->label(__('assignees'))
                     ->relationship('assignees', 'name')
                     ->multiple()
                     ->searchable()
@@ -172,14 +181,14 @@ class TicketsRelationManager extends RelationManager
                 
                 // Filter by creator
                 Tables\Filters\SelectFilter::make('created_by')
-                    ->label('Created By')
+                    ->label(__('Created By'))
                     ->relationship('creator', 'name')
                     ->searchable()
                     ->preload(),
                 
                 // Filter by epic
                 Tables\Filters\SelectFilter::make('epic_id')
-                    ->label('Epic')
+                    ->label(__('epic'))
                     ->options(function () {
                         $projectId = $this->getOwnerRecord()->id;
                         return Epic::where('project_id', $projectId)
@@ -205,11 +214,11 @@ class TicketsRelationManager extends RelationManager
                     Tables\Actions\DeleteBulkAction::make(),
                     
                     Tables\Actions\BulkAction::make('updateStatus')
-                        ->label('Update Status')
+                        ->label(__('Update Status'))
                         ->icon('heroicon-o-arrow-path')
                         ->form([
                             Forms\Components\Select::make('ticket_status_id')
-                                ->label('Status')
+                                ->label(__('status'))
                                 ->options(function (RelationManager $livewire) {
                                     $projectId = $livewire->getOwnerRecord()->id;
 
@@ -228,8 +237,8 @@ class TicketsRelationManager extends RelationManager
                             
                             Notification::make()
                                 ->success()
-                                ->title('Status updated')
-                                ->body(count($records) . ' tickets have been updated.')
+                                ->title(__('status updated'))
+                                ->body(count($records) . __('tickets have been updated.'))
                                 ->send();
                         }),
                     
@@ -254,8 +263,8 @@ class TicketsRelationManager extends RelationManager
                             Forms\Components\Radio::make('assignment_mode')
                                 ->label('Assignment Mode')
                                 ->options([
-                                    'replace' => 'Replace existing assignees',
-                                    'add' => 'Add to existing assignees',
+                                    'replace' => __('Replace existing assignees'),
+                                    'add' => __('Add to existing assignees'),
                                 ])
                                 ->default('add')
                                 ->required(),
@@ -271,8 +280,8 @@ class TicketsRelationManager extends RelationManager
                             
                             Notification::make()
                                 ->success()
-                                ->title('Users assigned')
-                                ->body(count($records) . ' tickets have been updated with new assignees.')
+                                ->title(__('Users assigned'))
+                                ->body(count($records) . __('tickets have been updated with new assignees.'))
                                 ->send();
                         }),
                 ]),

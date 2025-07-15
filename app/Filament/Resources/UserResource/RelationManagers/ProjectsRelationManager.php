@@ -12,11 +12,14 @@ class ProjectsRelationManager extends RelationManager
 {
     protected static string $relationship = 'projects';
 
+    protected static ?string $title = 'Проекты';
+
     public function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label(__('name'))
                     ->required()
                     ->maxLength(255),
             ]);
@@ -28,31 +31,32 @@ class ProjectsRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Project Name')
+                    ->label(__('name'))
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('description')
-                    ->label('Description')
+                    ->label(__('description'))
                     ->limit(50)
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('ticket_prefix')
-                    ->label('Ticket Prefix')
+                    ->label(__('ticket_prefix'))
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('tickets_count')
-                    ->label('Tickets')
+                    ->label( __('tickets'))
                     ->counts('tickets')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('members_count')
-                    ->label('Members')
+                    ->label(__('members'))
                     ->counts('members')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('Created at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

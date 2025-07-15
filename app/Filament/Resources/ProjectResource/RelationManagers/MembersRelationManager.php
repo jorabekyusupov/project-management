@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class MembersRelationManager extends RelationManager
 {
     protected static string $relationship = 'members';
+    protected static ?string $title = 'Участники';
 
     public static function getBadge(Model $ownerRecord, string $pageClass): ?string
     {
@@ -32,9 +33,11 @@ class MembersRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('name'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->label(__('email'))
                     ->searchable()
                     ->sortable()
             ])
@@ -54,10 +57,10 @@ class MembersRelationManager extends RelationManager
                                     '🆕 Вам добавлен новый участник в проект: ' . $ownerRecord->name . PHP_EOL .
                                     '📅 Дата начала: ' . $ownerRecord->start_date->format('d/m/Y') . PHP_EOL .
                                     '📅 Дата окончания: ' . ($ownerRecord->end_date ? $ownerRecord->end_date->format('d/m/Y') : 'Не указана') . PHP_EOL
-                               );
+                                );
                         }
                     })
-                    ->label('Add Member'),
+                    ->label(__('Add Member')),
             ])
             ->actions([
                 Tables\Actions\DetachAction::make()
@@ -66,7 +69,7 @@ class MembersRelationManager extends RelationManager
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DetachBulkAction::make()
-                        ->label('Remove Selected'),
+                        ->label(__('Remove Selected')),
                 ]),
             ]);
     }
