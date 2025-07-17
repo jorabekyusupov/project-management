@@ -48,8 +48,8 @@ class EditTicket extends EditRecord
                 if (!empty($invalidAssignees)) {
                     Notification::make()
                         ->warning()
-                        ->title('Some assignees removed')
-                        ->body('Some selected users are not members of this project and have been removed from assignees.')
+                        ->title(__('Some assignees removed'))
+                        ->body(__('Some selected users are not members of this project and have been removed from assignees.'))
                         ->send();
                 }
             }
@@ -106,8 +106,8 @@ class EditTicket extends EditRecord
     {
         return Notification::make()
             ->success()
-            ->title('Ticket updated')
-            ->body('The ticket has been updated successfully.');
+            ->title(__('Ticket updated'))
+            ->body(__('The ticket has been updated successfully.'));
     }
 
 

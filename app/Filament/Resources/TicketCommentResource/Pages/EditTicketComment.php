@@ -29,7 +29,7 @@ class EditTicketComment extends EditRecord
 
         if (! auth()->user()->hasRole(['super_admin']) && $record->user_id !== auth()->id()) {
             Notification::make()
-                ->title('You do not have permission to edit this comment')
+                ->title(__('You do not have permission to edit this comment'))
                 ->danger()
                 ->send();
             $this->redirect(route('filament.admin.resources.tickets.view', ['record' => $record->ticket_id]));
@@ -49,7 +49,7 @@ class EditTicketComment extends EditRecord
 
     protected function getSavedNotificationTitle(): ?string
     {
-        return 'Comment updated successfully';
+        return __('Comment updated successfully');
     }
 
     protected function mutateFormDataBeforeFill(array $data): array
@@ -66,7 +66,7 @@ class EditTicketComment extends EditRecord
 
         if (! auth()->user()->hasRole(['super_admin']) && $this->record->user_id !== auth()->id()) {
             Notification::make()
-                ->title('You do not have permission to edit this comment')
+                ->title(__('You do not have permission to edit this comment'))
                 ->danger()
                 ->send();
 

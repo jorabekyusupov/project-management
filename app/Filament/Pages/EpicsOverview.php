@@ -184,7 +184,7 @@ class EpicsOverview extends Page
         $this->expandedEpics = array_intersect($this->expandedEpics, $currentEpicIds);
 
         Notification::make()
-            ->title('Data refreshed')
+            ->title(__('Data refreshed'))
             ->success()
             ->send();
     }

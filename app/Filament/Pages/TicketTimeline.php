@@ -46,7 +46,7 @@ class TicketTimeline extends Page
             $this->selectedProject = Project::find($project_id);
         } elseif ($this->projects->isNotEmpty() && ! is_null($project_id)) {
             Notification::make()
-                ->title('Project Not Found')
+                ->title(__('Project Not Found'))
                 ->danger()
                 ->send();
             $this->redirect(static::getUrl());

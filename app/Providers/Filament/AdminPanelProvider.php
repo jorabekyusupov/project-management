@@ -29,6 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->spa()
             ->databaseTransactions()
             ->default()
+            ->brandName(__('project-management'))
             ->id('admin')
             ->path('admin')
             ->login()

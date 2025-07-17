@@ -56,7 +56,7 @@ class ProjectBoard extends Page
             $this->loadTicketStatuses();
         } elseif ($this->projects->isNotEmpty() && !is_null($project_id)) {
             Notification::make()
-                ->title('Project Not Found')
+                ->title(__('Project Not Found'))
                 ->danger()
                 ->send();
             $this->redirect(static::getUrl());
@@ -123,7 +123,7 @@ class ProjectBoard extends Page
             $this->dispatch('ticket-updated');
 
             Notification::make()
-                ->title('Ticket Updated')
+                ->title(__('Ticket Updated'))
                 ->success()
                 ->send();
 
@@ -174,7 +174,7 @@ class ProjectBoard extends Page
 
         if (!$ticket) {
             Notification::make()
-                ->title('Ticket Not Found')
+                ->title(__('Ticket Not Found'))
                 ->danger()
                 ->send();
 
@@ -197,8 +197,8 @@ class ProjectBoard extends Page
 
         if (!$this->canEditTicket($ticket)) {
             Notification::make()
-                ->title('Permission Denied')
-                ->body('You do not have permission to edit this ticket.')
+                ->title(__('Permission Denied'))
+                ->body(__('You do not have permission to edit this ticket.'))
                 ->danger()
                 ->send();
 
@@ -213,6 +213,7 @@ class ProjectBoard extends Page
         return [
             Action::make('new_ticket')
                 ->label('New Ticket')
+                ->translateLabel()
                 ->icon('heroicon-m-plus')
                 ->visible(fn() => $this->selectedProject !== null && auth()->user()->hasRole(['super_admin']))
                 ->url(fn(): string => TicketResource::getUrl('create', [
@@ -222,6 +223,7 @@ class ProjectBoard extends Page
 
             Action::make('refresh_board')
                 ->label('Refresh Board')
+                ->translateLabel()
                 ->icon('heroicon-m-arrow-path')
                 ->action('refreshBoard')
                 ->color('warning'),
@@ -269,8 +271,8 @@ class ProjectBoard extends Page
     {
         if (empty($selectedColumns)) {
             Notification::make()
-                ->title('Export Failed')
-                ->body('Please select at least one column to export.')
+                ->title(__('Export Failed'))
+                ->body(__('Please select at least one column to export.'))
                 ->danger()
                 ->send();
             return;
@@ -296,8 +298,8 @@ class ProjectBoard extends Page
 
         if ($tickets->isEmpty()) {
             Notification::make()
-                ->title('Export Failed')
-                ->body('No tickets found to export.')
+                ->title(__('Export Failed'))
+                ->body(__('No tickets found to export.'))
                 ->warning()
                 ->send();
             return;
@@ -326,15 +328,15 @@ class ProjectBoard extends Page
             ");
 
             Notification::make()
-                ->title('Export Successful')
-                ->body('Your Excel file is being downloaded.')
+                ->title(__('Export Successful'))
+                ->body(__('Your Excel file is being downloaded.'))
                 ->success()
                 ->send();
 
         } catch (\Exception $e) {
             Notification::make()
-                ->title('Export Failed')
-                ->body('An error occurred while exporting: ' . $e->getMessage())
+                ->title(__('Export Failed'))
+                ->body(__('An error occurred while exporting:') . $e->getMessage())
                 ->danger()
                 ->send();
         }

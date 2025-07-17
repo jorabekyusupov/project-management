@@ -54,8 +54,8 @@ class CreateTicket extends CreateRecord
                 if (!empty($invalidAssignees)) {
                     Notification::make()
                         ->warning()
-                        ->title('Some assignees removed')
-                        ->body('Some selected users are not members of this project and have been removed from assignees.')
+                        ->title(__('Some assignees removed'))
+                        ->body(__('Some selected users are not members of this project and have been removed from assignees.'))
                         ->send();
                 }
 
@@ -68,8 +68,8 @@ class CreateTicket extends CreateRecord
 
                         Notification::make()
                             ->info()
-                            ->title('Auto-assigned')
-                            ->body('No valid assignees found. You have been automatically assigned to this ticket.')
+                            ->title(__('Auto-assigned'))
+                            ->body(__('No valid assignees found. You have been automatically assigned to this ticket.'))
                             ->send();
                     }
                 }
@@ -103,8 +103,8 @@ class CreateTicket extends CreateRecord
     {
         return Notification::make()
             ->success()
-            ->title('Ticket created')
-            ->body('The ticket has been created successfully.');
+            ->title(__('Ticket created'))
+            ->body(__('The ticket has been created successfully.'));
     }
 
     protected function afterCreate(): void

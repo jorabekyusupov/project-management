@@ -43,7 +43,7 @@ class ViewTicket extends ViewRecord
                 }),
 
             Actions\Action::make('addComment')
-                ->label('Add Comment')
+                ->label(__('Add Comment'))
                 ->icon('heroicon-o-chat-bubble-left-right')
                 ->color('success')
                 ->form([
@@ -59,14 +59,14 @@ class ViewTicket extends ViewRecord
                     ]);
 
                     Notification::make()
-                        ->title('Comment added successfully')
+                        ->title(__('Comment added successfully'))
                         ->success()
                         ->send();
                 })
                 ->visible($canComment),
 
             Action::make('back')
-                ->label('Back to Board')
+                ->label(__('Back to Board'))
                 ->color('gray')
                 ->url(fn () => ProjectBoard::getUrl(['project_id' => $this->record->project_id])),
         ];
@@ -78,7 +78,7 @@ class ViewTicket extends ViewRecord
 
         if (! $comment) {
             Notification::make()
-                ->title('Comment not found')
+                ->title(__('Comment not found'))
                 ->danger()
                 ->send();
 
@@ -88,7 +88,7 @@ class ViewTicket extends ViewRecord
         // Check permissions
         if (! auth()->user()->hasRole(['super_admin']) && $comment->user_id !== auth()->id()) {
             Notification::make()
-                ->title('You do not have permission to edit this comment')
+                ->title(__('You do not have permission to edit this comment'))
                 ->danger()
                 ->send();
 
@@ -105,7 +105,7 @@ class ViewTicket extends ViewRecord
 
         if (! $comment) {
             Notification::make()
-                ->title('Comment not found')
+                ->title(__('Comment not found'))
                 ->danger()
                 ->send();
 
@@ -115,7 +115,7 @@ class ViewTicket extends ViewRecord
         // Check permissions
         if (! auth()->user()->hasRole(['super_admin']) && $comment->user_id !== auth()->id()) {
             Notification::make()
-                ->title('You do not have permission to delete this comment')
+                ->title(__('You do not have permission to delete this comment'))
                 ->danger()
                 ->send();
 
@@ -125,7 +125,7 @@ class ViewTicket extends ViewRecord
         $comment->delete();
 
         Notification::make()
-            ->title('Comment deleted successfully')
+            ->title(__('Comment deleted successfully'))
             ->success()
             ->send();
 
@@ -143,14 +143,14 @@ class ViewTicket extends ViewRecord
                             Section::make()
                                 ->schema([
                                     TextEntry::make('uuid')
-                                        ->label('Ticket ID')
+                                        ->label(__('Ticket ID'))
                                         ->copyable(),
 
                                     TextEntry::make('name')
-                                        ->label('Ticket Name'),
+                                        ->label(__('Ticket Name')),
 
                                     TextEntry::make('project.name')
-                                        ->label('Project'),
+                                        ->label(__('project')),
                                 ]),
                         ])->columnSpan(1),
 
@@ -158,7 +158,7 @@ class ViewTicket extends ViewRecord
                             Section::make()
                                 ->schema([
                                     TextEntry::make('status.name')
-                                        ->label('Status')
+                                        ->label(__('status'))
                                         ->badge()
                                         ->color(fn ($state) => match ($state) {
                                             'To Do' => 'warning',
@@ -170,17 +170,17 @@ class ViewTicket extends ViewRecord
 
                                     // FIXED: Multi-user assignees
                                     TextEntry::make('assignees.name')
-                                        ->label('Assigned To')
+                                        ->label(__('Assigned To'))
                                         ->badge()
                                         ->separator(',')
                                         ->default('Unassigned'),
 
                                     TextEntry::make('creator.name')
-                                        ->label('Created By')
+                                        ->label(__('Created By'))
                                         ->default('Unknown'),
 
                                     TextEntry::make('due_date')
-                                        ->label('Due Date')
+                                        ->label(__('Due Date'))
                                         ->date(),
                                 ]),
                         ])->columnSpan(1),
@@ -189,32 +189,33 @@ class ViewTicket extends ViewRecord
                             Section::make()
                                 ->schema([
                                     TextEntry::make('created_at')
-                                        ->label('Created At')
+                                        ->label(__('Created at'))
                                         ->dateTime(),
 
                                     TextEntry::make('updated_at')
-                                        ->label('Updated At')
+                                        ->label(__('Updated at'))
                                         ->dateTime(),
 
                                     TextEntry::make('epic.name')
-                                        ->label('Epic')
+                                        ->label(__('epic'))
                                         ->default('No Epic'),
                                 ]),
                         ])->columnSpan(1),
                     ]),
 
-                Section::make('Description')
+                Section::make(__('description'))
                     ->icon('heroicon-o-document-text')
                     ->schema([
                         TextEntry::make('description')
+                            ->label(__('description'))
                             ->hiddenLabel()
                             ->html()
                             ->columnSpanFull(),
                     ]),
 
-                Section::make('Comments')
+                Section::make(__('comments'))
                     ->icon('heroicon-o-chat-bubble-left-right')
-                    ->description('Discussion about this ticket')
+                    ->description(__('Discussion about this ticket'))
                     ->schema([
                         TextEntry::make('comments_list')
                             ->label('Recent Comments')
@@ -229,7 +230,7 @@ class ViewTicket extends ViewRecord
                     ])
                     ->collapsible(),
 
-                Section::make('Status History')
+                Section::make(__('Status History'))
                     ->icon('heroicon-o-clock')
                     ->collapsible()
                     ->schema([
@@ -244,7 +245,7 @@ class ViewTicket extends ViewRecord
     {
         return [
             Action::make('editComment')
-                ->label('Edit Comment')
+                ->label(__('Edit Comment'))
                 ->mountUsing(function (Forms\Form $form, array $arguments) {
                     $commentId = $arguments['commentId'] ?? null;
 
@@ -267,7 +268,7 @@ class ViewTicket extends ViewRecord
                     Hidden::make('commentId')
                         ->required(),
                     RichEditor::make('comment')
-                        ->label('Comment')
+                        ->label(__('comment'))
                         ->toolbarButtons([
                             'blockquote',
                             'bold',
@@ -290,7 +291,7 @@ class ViewTicket extends ViewRecord
 
                     if (! $comment) {
                         Notification::make()
-                            ->title('Comment not found')
+                            ->title(__('Comment not found'))
                             ->danger()
                             ->send();
 
@@ -300,7 +301,7 @@ class ViewTicket extends ViewRecord
                     // Check permissions
                     if (! auth()->user()->hasRole(['super_admin']) && $comment->user_id !== auth()->id()) {
                         Notification::make()
-                            ->title('You do not have permission to edit this comment')
+                            ->title(__('You do not have permission to edit this comment'))
                             ->danger()
                             ->send();
 
@@ -312,7 +313,7 @@ class ViewTicket extends ViewRecord
                     ]);
 
                     Notification::make()
-                        ->title('Comment updated successfully')
+                        ->title(__('Comment updated successfully'))
                         ->success()
                         ->send();
 
@@ -323,8 +324,8 @@ class ViewTicket extends ViewRecord
                     $this->redirect($this->getResource()::getUrl('view', ['record' => $this->getRecord()]));
                 })
                 ->modalWidth('lg')
-                ->modalHeading('Edit Comment')
-                ->modalSubmitActionLabel('Update')
+                ->modalHeading(__('Edit Comment'))
+                ->modalSubmitActionLabel(__('Update'))
                 ->color('success')
                 ->icon('heroicon-o-pencil'),
         ];
