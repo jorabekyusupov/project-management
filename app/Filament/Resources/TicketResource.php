@@ -15,6 +15,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Epic;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class TicketResource extends Resource
 {
@@ -126,7 +127,16 @@ class TicketResource extends Resource
                     ->label(__('description'))
                     ->fileAttachmentsDirectory('attachments')
                     ->columnSpanFull(),
-
+                Forms\Components\FileUpload::make('file')
+                    ->label(__('file'))
+                    ->columnSpanFull()
+                    ->disk('public')
+                    ->directory('task_files')
+                    ->getUploadedFileNameForStorageUsing(
+                        fn(TemporaryUploadedFile $file): string => (string)str($file->getClientOriginalName())
+                            ->prepend('task-file-'),
+                    )
+                    ->acceptedFileTypes(['zip', 'rar', 'docx', 'xlsx', 'application/pdf', 'image/*', 'text/*', 'video/*']),
                 // Multi-user assignment
                 Forms\Components\Select::make('assignees')
                     ->label(__('Assigned to'))
@@ -329,8 +339,16 @@ class TicketResource extends Resource
             ])
             ->defaultSort('created_at', 'desc')
             ->actions([
+                Tables\Actions\Action::make('download_file')
+                    ->iconButton()
+                    ->icon('heroicon-c-folder-arrow-down')
+                    ->visible(fn (Ticket $record): bool => !empty($record->file))
+                    ->action(function ($record) {
+                        return response()->download(storage_path('app/public/' . $record->file));
+                    }),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

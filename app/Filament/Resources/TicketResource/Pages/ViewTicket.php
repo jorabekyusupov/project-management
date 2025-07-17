@@ -33,6 +33,14 @@ class ViewTicket extends ViewRecord
             || $project->members()->where('users.id', auth()->id())->exists();
 
         return [
+           Actions\Action::make('download_file')
+                ->label('Download File')
+               ->translateLabel()
+                ->icon('heroicon-c-folder-arrow-down')
+                ->visible(fn (Ticket $record): bool => !empty($record->file))
+                ->action(function ($record) {
+                    return response()->download(storage_path('app/public/' . $record->file));
+                }),
             Actions\EditAction::make()
                 ->visible(function () {
                     $ticket = $this->getRecord();

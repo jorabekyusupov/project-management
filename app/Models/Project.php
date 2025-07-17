@@ -20,6 +20,7 @@ class Project extends Model
         'start_date',
         'end_date',
         'thread_id',
+        'file'
     ];
 
 

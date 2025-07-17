@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class ProjectResource extends Resource
 {
@@ -30,6 +31,16 @@ class ProjectResource extends Resource
                     ->label(__('name'))
                     ->required()
                     ->maxLength(255),
+                Forms\Components\FileUpload::make('file')
+                    ->label(__('file'))
+                    ->columnSpanFull()
+                    ->disk('public')
+                    ->directory('project_files')
+                    ->getUploadedFileNameForStorageUsing(
+                        fn(TemporaryUploadedFile $file): string => (string)str($file->getClientOriginalName())
+                            ->prepend('project-file-'),
+                    )
+                    ->acceptedFileTypes(['zip', 'rar', 'docx', 'xlsx', 'application/pdf']),
                 Forms\Components\RichEditor::make('description')
                     ->label(__('description'))
                     ->columnSpanFull(),
@@ -63,7 +74,7 @@ class ProjectResource extends Resource
                     ->helperText('Вы присоединитесь к соответствующей группе Chat ID, указанной выше, и выберите в ней тему, которая вам принадлежит, чтобы скопировать ссылку на любое сообщение, и ссылка будет выглядеть так:
 https://t.me/c/2535102279/3/60 и номер 3 в нем является идентификатором этой темы.
 https://t.me/c/2535102279/Нам нужен ID/60')
-                    ->maxLength(255)
+                    ->maxLength(255),
 
             ]);
     }
@@ -121,7 +132,15 @@ https://t.me/c/2535102279/Нам нужен ID/60')
                 // No toggle filter here
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Tables\Actions\EditAction::make(),
+            Tables\Actions\Action::make('download_file')
+                ->label(__('Download File'))
+                ->icon('heroicon-o-link')
+                ->visible(fn (Project $record): bool => !empty($record->file))
+                ->action(function ($record) {
+                    return response()->download(storage_path('app/public/' . $record->file));
+                }),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -24,6 +24,7 @@ class Ticket extends Model
         'uuid',
         'epic_id',
         'created_by',
+        'file',
     ];
 
     protected $casts = [
