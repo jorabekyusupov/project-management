@@ -29,7 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->spa()
             ->databaseTransactions()
             ->default()
-->favicon(asset('images/favicon2.ico'))
+            ->favicon(asset('images/favicon2.ico'))
             ->brandName(__('project-management'))
             ->id('admin')
             ->path('admin')
