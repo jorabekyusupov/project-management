@@ -33,7 +33,9 @@ class AdminPanelProvider extends PanelProvider
             ->brandName(__('project-management'))
             ->id('admin')
             ->path('admin')
+            ->topNavigation()
             ->login()
+            ->sidebarCollapsibleOnDesktop()
             ->registration()
             ->maxContentWidth(MaxWidth::Full)
             ->colors([

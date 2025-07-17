@@ -185,7 +185,8 @@
   "Status History": "История статусов",
   "Update": "Обновить",
   "file": "Файл",
-  "Download File": "Скачать файл"
+  "Download File": "Скачать файл",
+  "no_projects_found": "Проекты не найдены"
 
 
 }
